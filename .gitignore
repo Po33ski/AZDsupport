@@ -1,5 +1,16 @@
+# Python
 .env
+.env.local
 __pycache__/
 *.pyc
 *.pyo
 .venv/
+*.egg-info/
+
+# Node / Frontend
+node_modules/
+dist/
+.env.*.local
+
+# Editor
+.DS_Store
