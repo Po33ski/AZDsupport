@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
@@ -34,12 +34,8 @@ def run_workflow(message: str) -> tuple[str, str]:
 
         response_text = ""
         for event in stream:
-            if event.type == "response.completed":
-                for output_item in event.response.output:
-                    if output_item.content:
-                        for content_item in output_item.content:
-                            if content_item.type == "output_text":
-                                response_text += content_item.text
+            if event.type == "response.output_text.delta":
+                response_text += getattr(event, "delta", "")
             if (
                 event.type == "response.output_item.done"
                 and event.item.type == ItemType.WORKFLOW_ACTION
@@ -49,4 +45,32 @@ def run_workflow(message: str) -> tuple[str, str]:
         conversation_id = conversation.id
         openai_client.conversations.delete(conversation_id=conversation_id)
 
-        return conversation_id, response_text
+        return conversation_id, _strip_json_prefix(response_text)
+
+
+def _strip_json_prefix(text: str) -> str:
+    text = text.strip()
+    if not text.startswith("{"):
+        return text
+    depth = 0
+    in_string = False
+    escape = False
+    for i, ch in enumerate(text):
+        if escape:
+            escape = False
+            continue
+        if ch == "\\" and in_string:
+            escape = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[i + 1:].strip()
+    return text
