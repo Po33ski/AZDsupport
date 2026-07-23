@@ -2,6 +2,16 @@
 
 A chatbot built on Azure AI Foundry that helps users with the `azd` (Azure Developer CLI) tool. Backend built with FastAPI, frontend with React + TypeScript (Vite).
 
+## Workflow
+
+The chatbot is powered by the `azd-support` workflow defined in Azure AI Foundry, which orchestrates three agents for each message:
+
+1. **Collect-Info-Agent** — classifies the user's question and assigns a confidence score.
+2. **azd-expert-agent** — for confident classifications, retrieves relevant docs from a knowledge base (via an MCP tool) and drafts an answer.
+3. **Resolution-Agent** — produces the final response returned to the user.
+
+![azd-support workflow](./azd-support%20workflow.png)
+
 ## Requirements
 
 - Python 3.10+
@@ -50,3 +60,4 @@ Frontend runs at: `http://localhost:5173`
 ## Usage
 
 Open `http://localhost:5173` in your browser and ask a question about Azure Developer CLI.
+
