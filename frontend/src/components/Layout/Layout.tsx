@@ -11,7 +11,7 @@ export default function Layout({ children }: LayoutProps) {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <h1 className={styles.title}>AZD Support</h1>
-          <p className={styles.subtitle}>Asystent Azure Developer CLI</p>
+          <p className={styles.subtitle}>Azure Developer CLI Assistant</p>
         </div>
       </header>
       <main className={styles.main}>{children}</main>

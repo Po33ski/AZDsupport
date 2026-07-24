@@ -57,16 +57,16 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Napisz wiadomość… (Enter – wyślij, Shift+Enter – nowa linia)"
+          placeholder="Type a message… (Enter to send, Shift+Enter for a new line)"
           rows={1}
           disabled={disabled}
-          aria-label="Wpisz wiadomość"
+          aria-label="Type a message"
         />
         <button
           className={styles.sendButton}
           onClick={handleSend}
           disabled={!canSend}
-          aria-label="Wyślij wiadomość"
+          aria-label="Send message"
           type="button"
         >
           <SendIcon />

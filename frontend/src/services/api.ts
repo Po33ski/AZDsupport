@@ -10,7 +10,7 @@ export async function postChat(request: ApiChatRequest): Promise<ApiChatResponse
   });
 
   if (!res.ok) {
-    throw new Error(`Błąd serwera: ${res.status} ${res.statusText}`);
+    throw new Error(`Server error: ${res.status} ${res.statusText}`);
   }
 
   return res.json() as Promise<ApiChatResponse>;
@@ -22,6 +22,6 @@ export async function deleteConversation(conversationId: string): Promise<void> 
   });
 
   if (!res.ok) {
-    throw new Error(`Błąd serwera: ${res.status} ${res.statusText}`);
+    throw new Error(`Server error: ${res.status} ${res.statusText}`);
   }
 }

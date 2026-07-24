@@ -23,7 +23,7 @@ export default function Chat() {
             disabled={isLoading}
             type="button"
           >
-            Nowa rozmowa
+            New conversation
           </button>
         </div>
       )}
@@ -32,12 +32,12 @@ export default function Chat() {
         className={styles.messages}
         role="log"
         aria-live="polite"
-        aria-label="Historia rozmowy"
+        aria-label="Conversation history"
       >
         {messages.length === 0 && (
           <div className={styles.empty}>
             <p>
-              Witaj! Zapytaj mnie o cokolwiek związanego z{' '}
+              Hi! Ask me anything about{' '}
               <strong>Azure Developer CLI</strong>.
             </p>
           </div>
@@ -55,7 +55,7 @@ export default function Chat() {
             <button
               className={styles.errorDismiss}
               onClick={clearError}
-              aria-label="Zamknij powiadomienie o błędzie"
+              aria-label="Dismiss error notification"
               type="button"
             >
               ×

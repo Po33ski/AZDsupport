@@ -6,7 +6,7 @@ interface MessageProps {
 }
 
 function formatTime(date: Date): string {
-  return date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
 export default function Message({ message }: MessageProps) {
@@ -15,7 +15,7 @@ export default function Message({ message }: MessageProps) {
   return (
     <article
       className={`${styles.row} ${isUser ? styles.rowUser : styles.rowAssistant}`}
-      aria-label={isUser ? 'Twoja wiadomość' : 'Odpowiedź asystenta'}
+      aria-label={isUser ? 'Your message' : "Assistant's response"}
     >
       <div
         className={`${styles.avatar} ${isUser ? styles.avatarUser : styles.avatarAssistant}`}

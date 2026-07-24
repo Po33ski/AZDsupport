@@ -2,7 +2,7 @@ import styles from './TypingIndicator.module.css';
 
 export default function TypingIndicator() {
   return (
-    <div className={styles.row} role="status" aria-label="Asystent pisze...">
+    <div className={styles.row} role="status" aria-label="Assistant is typing...">
       <div className={styles.avatar} aria-hidden="true">
         AI
       </div>
