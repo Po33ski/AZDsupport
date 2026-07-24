@@ -6,7 +6,7 @@ import TypingIndicator from '../TypingIndicator/TypingIndicator';
 import styles from './Chat.module.css';
 
 export default function Chat() {
-  const { messages, isLoading, error, sendMessage, clearError } = useChat();
+  const { messages, isLoading, error, sendMessage, clearError, startNewConversation } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,6 +15,19 @@ export default function Chat() {
 
   return (
     <div className={styles.container}>
+      {messages.length > 0 && (
+        <div className={styles.toolbar}>
+          <button
+            className={styles.newChatButton}
+            onClick={startNewConversation}
+            disabled={isLoading}
+            type="button"
+          >
+            Nowa rozmowa
+          </button>
+        </div>
+      )}
+
       <div
         className={styles.messages}
         role="log"

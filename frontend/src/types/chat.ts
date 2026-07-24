@@ -9,6 +9,7 @@ export interface Message {
 
 export interface ApiChatRequest {
   message: string;
+  conversation_id?: string;
 }
 
 export interface ApiChatResponse {

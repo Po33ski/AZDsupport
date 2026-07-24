@@ -1,4 +1,6 @@
 import os
+from contextlib import contextmanager
+from typing import Optional
 from dotenv import load_dotenv, find_dotenv
 
 from azure.identity import DefaultAzureCredential
@@ -17,7 +19,8 @@ WORKFLOW = {
 MAX_APPROVAL_ROUNDS = 5
 
 
-def run_workflow(message: str) -> tuple[str, str]:
+@contextmanager
+def _openai_client():
     endpoint = os.environ["PROJECT_ENDPOINT"]
 
     with (
@@ -25,14 +28,19 @@ def run_workflow(message: str) -> tuple[str, str]:
         AIProjectClient(endpoint=endpoint, credential=credential) as project_client,
         project_client.get_openai_client() as openai_client,
     ):
-        conversation = openai_client.conversations.create()
+        yield openai_client
+
+
+def run_workflow(message: str, conversation_id: Optional[str] = None) -> tuple[str, str]:
+    with _openai_client() as openai_client:
+        conversation_id = conversation_id or openai_client.conversations.create().id
 
         next_input = message
         response_text = ""
 
         for _ in range(MAX_APPROVAL_ROUNDS):
             stream = openai_client.responses.create(
-                conversation=conversation.id,
+                conversation=conversation_id,
                 extra_body={"agent": {"name": WORKFLOW["name"], "type": "agent_reference"}},
                 input=next_input,
                 stream=True,
@@ -72,10 +80,12 @@ def run_workflow(message: str) -> tuple[str, str]:
                 for approval_id in pending_approval_ids
             ]
 
-        conversation_id = conversation.id
-        openai_client.conversations.delete(conversation_id=conversation_id)
-
         return conversation_id, _strip_json_prefix(response_text)
+
+
+def delete_conversation(conversation_id: str) -> None:
+    with _openai_client() as openai_client:
+        openai_client.conversations.delete(conversation_id=conversation_id)
 
 
 def _strip_json_prefix(text: str) -> str:

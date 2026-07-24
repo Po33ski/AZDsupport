@@ -15,3 +15,13 @@ export async function postChat(request: ApiChatRequest): Promise<ApiChatResponse
 
   return res.json() as Promise<ApiChatResponse>;
 }
+
+export async function deleteConversation(conversationId: string): Promise<void> {
+  const res = await fetch(`${BASE_URL}/chat/${conversationId}`, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    throw new Error(`Błąd serwera: ${res.status} ${res.statusText}`);
+  }
+}

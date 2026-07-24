@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { Message } from '../types/chat';
-import { postChat } from '../services/api';
+import { postChat, deleteConversation } from '../services/api';
 
 export interface UseChatReturn {
   messages: Message[];
@@ -8,12 +8,14 @@ export interface UseChatReturn {
   error: string | null;
   sendMessage: (content: string) => Promise<void>;
   clearError: () => void;
+  startNewConversation: () => Promise<void>;
 }
 
 export function useChat(): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const conversationIdRef = useRef<string | undefined>(undefined);
 
   const sendMessage = useCallback(async (content: string): Promise<void> => {
     const trimmed = content.trim();
@@ -31,7 +33,8 @@ export function useChat(): UseChatReturn {
     setError(null);
 
     try {
-      const data = await postChat({ message: trimmed });
+      const data = await postChat({ message: trimmed, conversation_id: conversationIdRef.current });
+      conversationIdRef.current = data.conversation_id;
       const assistantMessage: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
@@ -49,5 +52,21 @@ export function useChat(): UseChatReturn {
 
   const clearError = useCallback(() => setError(null), []);
 
-  return { messages, isLoading, error, sendMessage, clearError };
+  const startNewConversation = useCallback(async (): Promise<void> => {
+    const previousConversationId = conversationIdRef.current;
+    conversationIdRef.current = undefined;
+    setMessages([]);
+    setError(null);
+
+    if (previousConversationId) {
+      try {
+        await deleteConversation(previousConversationId);
+      } catch {
+        // Best-effort cleanup: the old conversation may linger server-side,
+        // but the user's local chat has already moved on.
+      }
+    }
+  }, []);
+
+  return { messages, isLoading, error, sendMessage, clearError, startNewConversation };
 }
