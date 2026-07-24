@@ -1,9 +1,5 @@
-import type { ReactNode } from 'react';
+import type { LayoutProps } from '../../types/chat';
 import styles from './Layout.module.css';
-
-interface LayoutProps {
-  children: ReactNode;
-}
 
 export default function Layout({ children }: LayoutProps) {
   return (

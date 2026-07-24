@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { Message } from '../types/chat';
+import type { Message, UseChatReturn } from '../types/chat';
 import { postChat, deleteConversation } from '../services/api';
 
 const CONVERSATION_ID_KEY = 'azd-support:conversationId';
@@ -42,15 +42,6 @@ function saveStoredMessages(messages: Message[]): void {
   } catch {
     // sessionStorage unavailable (e.g. private browsing) — persistence is best-effort.
   }
-}
-
-export interface UseChatReturn {
-  messages: Message[];
-  isLoading: boolean;
-  error: string | null;
-  sendMessage: (content: string) => Promise<void>;
-  clearError: () => void;
-  startNewConversation: () => Promise<void>;
 }
 
 export function useChat(): UseChatReturn {

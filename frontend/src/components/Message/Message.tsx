@@ -1,9 +1,5 @@
-import type { Message as MessageType } from '../../types/chat';
+import type { MessageProps } from '../../types/chat';
 import styles from './Message.module.css';
-
-interface MessageProps {
-  message: MessageType;
-}
 
 function formatTime(date: Date): string {
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -21,7 +17,7 @@ export default function Message({ message }: MessageProps) {
         className={`${styles.avatar} ${isUser ? styles.avatarUser : styles.avatarAssistant}`}
         aria-hidden="true"
       >
-        {isUser ? 'Ty' : 'AI'}
+        {isUser ? 'Me' : 'AI'}
       </div>
       <div className={`${styles.bubble} ${isUser ? styles.bubbleUser : styles.bubbleAssistant}`}>
         <p className={styles.content}>{message.content}</p>

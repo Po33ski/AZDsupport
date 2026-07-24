@@ -1,11 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import type { KeyboardEvent, ChangeEvent } from 'react';
+import type { MessageInputProps } from '../../types/chat';
 import styles from './MessageInput.module.css';
-
-interface MessageInputProps {
-  onSend: (content: string) => void;
-  disabled: boolean;
-}
 
 export default function MessageInput({ onSend, disabled }: MessageInputProps) {
   const [value, setValue] = useState('');
